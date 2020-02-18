@@ -10,14 +10,14 @@
 # docker run richardeigenmann/hello
 
 
-FROM opensuse:tumbleweed
+FROM opensuse/tumbleweed
 
 # Adds the repos with latest clang, gcc and stdlibc++
 RUN  zypper addrepo -f --no-gpgcheck http://download.opensuse.org/repositories/devel:/tools:/compiler/openSUSE_Factory/devel:tools:compiler.repo  \
   && zypper addrepo -f --no-gpgcheck http://download.opensuse.org/repositories/devel:/libraries:/c_c++/openSUSE_Factory/devel:libraries:c_c++.repo \
   && zypper install --no-confirm \
     git\
-    clang5\
+    clang9\
     gcc-c++ \
     cmake \
     vim \
