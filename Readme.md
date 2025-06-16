@@ -1,10 +1,32 @@
-# A Docker container with nothing but a statically linked C++ executable
+# How small can we make a container?
 
 ## An experiment by Richard Eigenmann
 
 Inspired by a talk from Miroszlav Magyarevity at the 17th Docker Switzerland Meetup hosted by Oracle in the Prime Tower in Z&uuml;rich on 30 May 2018.
 
-## Try it
+## Introduction
+
+Often containers are huge, several hundred MB of stuff. Makes sense. After all there is perhaps and entire Operating System worth of code in there.
+
+I have found that to build C++ programs I might require a container that consumes a whopping 1.32GB of storage. The one built by the accompanying `Dockerfile` certainly does. It is based on the OpenSuSE Tumbleweed container and adds the Clang and Gcc compiler to it.
+
+In this project I have used the 1.32GB heavyweight container to compile a C++ hello world program into a static binary. After the compile step I build a second container using the `FROM scratch` container which is a special Docker base container with nothing in it and add the staticlly linked binary.
+
+If I stay with C++ the hello world program compiles down to 13MB and the scratch container with this program remains at the same size. If I swap out C++'s `cout` to C's `printf` I can get the size down to 3MB.
+
+## What this is good for
+
+If we want to deploy a program in a Docker container with nothing but a statically linked executable we can use this multibuild `FROM scratch` approach. Go programs typically compile down to single staticly linked executables as you can with many other languages.
+
+## What this is not good for
+
+The container has no `ldd` or `libc` libraries. So the program has no way to load other modules. So if your project is not entirely static you will probably have to look for a different container.
+
+## Check it out
+
+Run these steps on your Linux machine. They will clone this repo and ask Docker to follow the steps in the `Dockerfile`.
+
+The Dockerfile tells Docker to download the latest OpenSuSE Tumbleweed container and add the Clang and Gcc compilers to it. It then asks CMake to compile the main.cpp program to a static executable. The executable is then added to a new `FROM scratch` container. The last command executes the output container to prove that it prints 'Hello World'
 
 ```bash
 cd <yourWorkDirectory>
@@ -14,7 +36,9 @@ docker build --rm=false -t richardeigenmann/hello .
 docker run richardeigenmann/hello
 ```
 
-## How big is it?
+## How big is the container?
+
+Use this command to check the size of the resulting container:
 
 ```bash
 # query the built image:
@@ -33,7 +57,7 @@ The first result was from statically linking `<iostream>` and calling std::cout 
 
 Setting up a development environment for C++ involves intalling a lot of tools and libraries which can lead to problems. A great feature of containers is that you can push this set-up into a container and use different containers for different requirements.
 
-In this project (see the `Dockerfile`) I have chosen to build a heavyweight 829MB compiling container out of OpenSuse's Tumbleweed distro. This drags in the latest clang and gcc compilers and a number of utilities. If required I would also install libraries here.
+In this project (see the `Dockerfile`) I have chosen to build a heavyweight 1.32GB compiling container out of OpenSuSE's Tumbleweed distro. This drags in the latest clang and gcc compilers and a number of utilities. If required I would also install libraries here.
 
 The build step then proceeds to copy the `CMakeLists.txt` and `main.cpp` files into the compiling conatiner and uses cmake to compile and link the executable.
 
