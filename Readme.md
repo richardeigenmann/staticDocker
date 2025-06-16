@@ -22,12 +22,12 @@ docker images richardeigenmann/hello
 ```
 
 ```bash
-REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
-richardeigenmann/hello   latest              1ee25d730753        28 minutes ago      17MB
-richardeigenmann/hello   latest              c6a00ffe0973        23 minutes ago      5.27MB
+REPOSITORY               TAG       IMAGE ID       CREATED             SIZE
+richardeigenmann/hello   latest    94d0d669a22e   About a minute ago  13.2MB
+richardeigenmann/hello   latest    af77bf038e7a   3 seconds ago       3.23MB
 ```
 
-The first result was from statically linking `<iostream>` and calling std::cout on a "Hello World" string. 17MB does seem rather a lot but a Google search reveals that this drags a lot of code in. If we switch to `<cstdio>` and use printf instead, size drops to 5MB. This actually corresponds to the size of the executable as evidenced by the `ls -lh` command I planted in the compile step.
+The first result was from statically linking `<iostream>` and calling std::cout on a "Hello World" string. 13MB does seem rather a lot but a Google search reveals that this drags a lot of code in. If we switch to `<cstdio>` and use printf instead, size drops to 3MB. This actually corresponds to the size of the executable as evidenced by the `ls -lh` command I planted in the compile step.
 
 ## Explanation
 

@@ -17,7 +17,7 @@ RUN  zypper addrepo -f --no-gpgcheck http://download.opensuse.org/repositories/d
   && zypper addrepo -f --no-gpgcheck http://download.opensuse.org/repositories/devel:/libraries:/c_c++/openSUSE_Factory/devel:libraries:c_c++.repo \
   && zypper install --no-confirm \
     git\
-    clang9\
+    clang19\
     gcc-c++ \
     cmake \
     vim \
